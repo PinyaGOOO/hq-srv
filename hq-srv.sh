@@ -17,6 +17,8 @@ sed -i '5i\include "/etc/nftables/hq-srv.nft"' /etc/sysconfig/nftables.conf
 systemctl restart nftables
 systemctl enable --now nftables
 
+hostnamectl set-hostname hq-srv; exec bash
+
 
 
 
