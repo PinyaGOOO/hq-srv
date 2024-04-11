@@ -1,9 +1,6 @@
 #!/bin/bash
 dnf remove -y git
 dnf install -y nftables
-nmcli con modify Проводное\ подключение\ 1 ipv4.method auto
-
-nmcli con modify Проводное\ подключение\ 1 ipv6.method auto
 
 useradd -c "Admin" admin -U
 echo "admin:P@ssw0rd" | chpasswd
