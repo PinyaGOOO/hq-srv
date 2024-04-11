@@ -1,4 +1,5 @@
 #!/bin/bash
+dnf remove -y git
 dnf install -y nftables
 nmcli con modify Проводное\ подключение\ 1 ipv4.method auto
 
