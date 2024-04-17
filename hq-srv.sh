@@ -2,8 +2,8 @@
 dnf remove -y git
 dnf install -y nftables
 
-useradd -c "Admin" admin -U
-echo "admin:P@ssw0rd" | chpasswd
+useradd -c "Admin" Admin -U
+echo "Admin:P@ssw0rd" | chpasswd
 
 sed -i '/#Port 22/d' /etc/ssh/sshd_config
 sed -i '17i\Port 2222' /etc/ssh/sshd_config
@@ -15,7 +15,7 @@ sed -i '5i\include "/etc/nftables/hq-srv.nft"' /etc/sysconfig/nftables.conf
 systemctl restart nftables
 systemctl enable --now nftables
 
-hostnamectl set-hostname hq-srv; exec bash
+hostnamectl set-hostname HQ-SRV; exec bash
 
 
 
