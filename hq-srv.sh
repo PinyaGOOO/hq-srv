@@ -17,8 +17,9 @@ systemctl restart nftables
 systemctl enable --now nftables
 sed -i "s/listen-on port 53 { 127.0.0.1; };/listen-on { any; };/" /etc/named.conf
 sed -i "s/allow-query     { localhost; };/allow-query     { any; };/" /etc/named.conf
-sed -i '20a//tforward first;' /etc/named.conf
-sed -i '21a//tforwarders { 8.8.8.8; 77.88.4.4; };' /etc/named.conf
+sed -i '18a\\tforward first;' /etc/named.conf
+sed -i '19a\\tforwarders { 8.8.8.8; 77.88.4.4; };' /etc/named.conf
+echo -e 'zone "hq.work" {\n\ttype master;\n\tfile "hq.db";\n};\nzone "branch.work" {\n\ttype master;\n\tfile "branch.db";\n};\nzone "100.16.172.in-addr.arpa" {\n\ttype master;\n\tfile "172.db";\n};\n\tzone "100.168.192.in-addr.arpa" {\n\ttype master;\n\tfile "192.db"\n};' >> /etc/named.conf
 
 hostnamectl set-hostname HQ-SRV; exec bash
 
