@@ -21,11 +21,11 @@ sed -i '18a\\tforward first;' /etc/named.conf
 sed -i '19a\\tforwarders { 8.8.8.8; 77.88.4.4; };' /etc/named.conf
 echo -e 'zone "hq.work" {\n\ttype master;\n\tfile "hq.db";\n};\nzone "branch.work" {\n\ttype master;\n\tfile "branch.db";\n};\nzone "100.16.172.in-addr.arpa" {\n\ttype master;\n\tfile "172.db";\n};\nzone "100.168.192.in-addr.arpa" {\n\ttype master;\n\tfile "192.db";\n};' >> /etc/named.conf
 mkdir /etc/zone
-echo -e "$TTL\t1D\n@\tIN\tSOA\thq.work root.hq.work. (\n\t\t\t\t2024021400\t; serial\n\t\t\t\t12H\t\t; refresh\n\t\t\t\t1H\t\t; retry\n\t\t\t\t1W\t\t; expire\n\t\t\t\t1H\t\t; ncache\n\t\t\t)\n\tIN\tNS\thq.work.\n\tIN\tA\t127.0.0.0\nhq-r\tIN\tA\t172.16.100.1\nhq-srv\tIN\tA\t172.16.100.2" >/etc/zone/hq.db
-echo -e "$TTL\t1D\n@\tIN\tSOA\tbranch.work root.branch.work. (\n\t\t\t\t2024021400\t; serial\n\t\t\t\t12H\t\t; refresh\n\t\t\t\t1H\t\t; retry\n\t\t\t\t1W\t\t; expire\n\t\t\t\t1H\t\t; ncache\n\t\t\t)\n\tIN\tNS\tbranch.work.\n\tIN\tA\t127.0.0.0\nbr-r\tIN\tA\t192.168.100.1\nbr-srv\tIN\tA\t192.168.100.10" >/etc/zone/branch.db
-echo -e "$TTL\t1D\n@\tIN\tSOA\thq.work root.hq.work. (\n\t\t\t\t2024021400\t; serial\n\t\t\t\t12H\t\t; refresh\n\t\t\t\t1H\t\t; retry\n\t\t\t\t1W\t\t; expire\n\t\t\t\t1H\t\t; ncache\n\t\t\t)\n\tIN\tNS\thq.work.\n1\tIN\tPTR\thq-r.hq.work.\n2\tIN\tPTR\thq-srv.hq.work." >/etc/zone/172.db
-echo -e "$TTL\t1D\n@\tIN\tSOA\tbranch.work root.branch.work. (\n\t\t\t\t2024021400\t; serial\n\t\t\t\t12H\t\t; refresh\n\t\t\t\t1H\t\t; retry\n\t\t\t\t1W\t\t; expire\n\t\t\t\t1H\t\t; ncache\n\t\t\t)\n\tIN\tNS\tbranch.work.\n1\tIN\tPTR\tbr-r.branch.work." >/etc/zone/192.db
-chown root:named /etc/bind/zone/ {hq,branch,172,192}.db
+echo -e "'$TTL'\t1D\n@\tIN\tSOA\thq.work root.hq.work. (\n\t\t\t\t2024021400\t; serial\n\t\t\t\t12H\t\t; refresh\n\t\t\t\t1H\t\t; retry\n\t\t\t\t1W\t\t; expire\n\t\t\t\t1H\t\t; ncache\n\t\t\t)\n\tIN\tNS\thq.work.\n\tIN\tA\t127.0.0.0\nhq-r\tIN\tA\t172.16.100.1\nhq-srv\tIN\tA\t172.16.100.2" >/etc/zone/hq.db
+echo -e "'$TTL'\t1D\n@\tIN\tSOA\tbranch.work root.branch.work. (\n\t\t\t\t2024021400\t; serial\n\t\t\t\t12H\t\t; refresh\n\t\t\t\t1H\t\t; retry\n\t\t\t\t1W\t\t; expire\n\t\t\t\t1H\t\t; ncache\n\t\t\t)\n\tIN\tNS\tbranch.work.\n\tIN\tA\t127.0.0.0\nbr-r\tIN\tA\t192.168.100.1\nbr-srv\tIN\tA\t192.168.100.10" >/etc/zone/branch.db
+echo -e "'$TTL'\t1D\n@\tIN\tSOA\thq.work root.hq.work. (\n\t\t\t\t2024021400\t; serial\n\t\t\t\t12H\t\t; refresh\n\t\t\t\t1H\t\t; retry\n\t\t\t\t1W\t\t; expire\n\t\t\t\t1H\t\t; ncache\n\t\t\t)\n\tIN\tNS\thq.work.\n1\tIN\tPTR\thq-r.hq.work.\n2\tIN\tPTR\thq-srv.hq.work." >/etc/zone/172.db
+echo -e "'$TTL'\t1D\n@\tIN\tSOA\tbranch.work root.branch.work. (\n\t\t\t\t2024021400\t; serial\n\t\t\t\t12H\t\t; refresh\n\t\t\t\t1H\t\t; retry\n\t\t\t\t1W\t\t; expire\n\t\t\t\t1H\t\t; ncache\n\t\t\t)\n\tIN\tNS\tbranch.work.\n1\tIN\tPTR\tbr-r.branch.work." >/etc/zone/192.db
+chown root:named /etc/zone/{hq,branch,172,192}.db
 
 hostnamectl set-hostname HQ-SRV; exec bash
 
