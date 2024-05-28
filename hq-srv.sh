@@ -1,6 +1,7 @@
 #!/bin/bash
 dnf remove -y git
 dnf install -y nftables
+dnf install -y bind bind-utils
 
 useradd -c "Admin" Admin -U
 echo "Admin:P@ssw0rd" | chpasswd
@@ -14,6 +15,10 @@ sed -i '5i\include "/etc/nftables/hq-srv.nft"' /etc/sysconfig/nftables.conf
 
 systemctl restart nftables
 systemctl enable --now nftables
+sed -i "s/listen-on port 53 { 127.0.0.1; };/listen-on { any; };/" /etc/named.conf
+sed -i "s/allow-query { localhost; };/allow-query { any; };/" /etc/named.conf
+sed -i '20a/forward first;' /etc/named.conf
+sed -i '21a/forwarders { 8.8.8.8; 77.88.4.4; };' /etc/named.conf
 
 hostnamectl set-hostname HQ-SRV; exec bash
 
