@@ -24,7 +24,7 @@ sed -i "s/allow-query     { localhost; };/allow-query     { any; };/" /etc/named
 sed -i '18a\\tforward first;' /etc/named.conf
 sed -i '19a\\tforwarders { 8.8.8.8; 77.88.4.4; };' /etc/named.conf
 sed -i '20a\\ttkey-gssapi-keytab "/var/lib/samba/bind-dns/dns.keytab";' /etc/named.conf
-sed -i '53a\\tcategory lame-servers {null;};' /etc/named.conf
+sed -i '52a\\tcategory lame-servers {null;};' /etc/named.conf
 sed -i '22a\\tminimal-responses yes;' /etc/named.conf
 echo -e 'zone "hq.work" {\n\ttype master;\n\tfile "/etc/zone/hq.db";\n};\nzone "branch.work" {\n\ttype master;\n\tfile "/etc/zone/branch.db";\n};\nzone "100.16.172.in-addr.arpa" {\n\ttype master;\n\tfile "/etc/zone/172.db";\n};\nzone "100.168.192.in-addr.arpa" {\n\ttype master;\n\tfile "/etc/zone/192.db";\n};' >> /etc/named.conf
 mkdir /etc/zone
