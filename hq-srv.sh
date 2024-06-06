@@ -8,10 +8,10 @@ useradd -c "Admin" Admin -U
 echo "Admin:P@ssw0rd" | chpasswd
 
 sed -i '/#Port 22/d' /etc/ssh/sshd_config
-sed -i '17i\Port 2222' /etc/ssh/sshd_config
+sed -i '17i\Port 2020' /etc/ssh/sshd_config
 systemctl restart sshd
 
-echo -e "table inet filter {\n\t\tchain input {\n\t\ttype filter hook input priority filter; policy accept;\n\t\tip saddr 3.3.3.2 tcp dport 2222 counter reject\n\t\tip saddr 4.4.4.0/30 tcp dport 2222 counter reject\t\t}\n}" > /etc/nftables/hq-srv.nft
+echo -e "table inet filter {\n\t\tchain input {\n\t\ttype filter hook input priority filter; policy accept;\n\t\tip saddr 3.3.3.2 tcp dport 2020 counter reject;\n\t\tip saddr 4.4.4.0/30 tcp dport 2020 counter reject;\t\t}\n}" > /etc/nftables/hq-srv.nft
 sed -i '5i\include "/etc/nftables/hq-srv.nft"' /etc/sysconfig/nftables.conf
 
 systemctl restart nftables
@@ -38,7 +38,7 @@ systemctl enable --now named
 systemctl restart named
 systemctl restart NetworkManager
 
-timedatectl set-timezone Europe/Moscow
+
 sed -i '3s/^/#/' /etc/chrony.conf
 sed -i '4s/^/#/' /etc/chrony.conf
 sed -i '5s/^/#/' /etc/chrony.conf
@@ -60,26 +60,11 @@ mkdir -p /var/lib/samba/sysvol
 
 rm -f /var/lib/krb5kdc
 mkdir -p /var/lib/krb5kdc
-kdb5_util create -s
 
 samba-tool domain provision --realm=hq.work --domain=hq --adminpass='P@ssw0rd' --dns-backend=BIND9_DLZ --server-role=dc --use-rfc2307
 
 systemctl enable --now samba
 systemctl enable --now named
-
-cp /var/lib/samba/private/krb5.conf /etc/krb5.conf
-
-sed -i "s/dns_lookup_kdc = false/dns_lookup_kdc = true/" /etc/krb5.conf
-sed -i '9a\\tkdc_ports = 88' /etc/krb5.conf
-sed -i '10a\\tkdc_tcp_ports = 88' /etc/krb5.conf
-sed -i '11a\\tadmin_server = HQ-SRV.hq.work' /etc/krb5.conf
-sed -i '12a\\tkdc = HQ-SRV.hq.work' /etc/krb5.conf
-sed -i '13a\\tdatabase_name = /var/lib/krb5kdc/principal' /etc/krb5.conf
-sed -i '16a\\t.HQ-SRV = HQ.WORK' /etc/krb5.conf
-sed -i '17a\\thq-srv = HQ.WORK' /etc/krb5.conf
-sed -i '18a\\t.hq-srv = HQ.WORK' /etc/krb5.conf
-
-host -t SRV _ldap._tcp
 
 
 
